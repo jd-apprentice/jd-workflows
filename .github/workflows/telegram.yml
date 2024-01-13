@@ -17,11 +17,9 @@ on:
         required: false
         type: string
     secrets:
-      envTOKEN:
-        description: 'Telegram Bot Token'
-        required: true
       envCHAT_ID:
-        description: 'Telegram Chat ID'
+        required: true
+      envTOKEN:
         required: true
 
 jobs:

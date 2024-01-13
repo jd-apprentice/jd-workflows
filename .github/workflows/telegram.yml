@@ -24,6 +24,7 @@ on:
 
 jobs:
   telegram_notification:
+    if: always()
     runs-on: ${{ inputs.runs-on }}
     name: ${{ inputs.name }}
     steps:

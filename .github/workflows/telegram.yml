@@ -6,21 +6,25 @@ on:
     inputs:
       message:
         description: 'Message to send'
-        required: true
+        required: false
+        type: string
       runs-on:
         description: 'Runs on'
         required: false
-        default: 'ubuntu-latest'
+        type: string
       name:
         description: 'Name'
         required: false
+        type: string
     secrets:
       envTOKEN:
         description: 'Telegram Bot Token'
         required: true
+        type: string
       envCHAT_ID:
         description: 'Telegram Chat ID'
         required: true
+        type: number
 
 jobs:
   telegram_notification:

@@ -17,7 +17,7 @@ on:
         required: false
         type: string
     secrets:
-      envCHAT_ID:
+      envTO:
         required: true
       envTOKEN:
         required: true
@@ -32,8 +32,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: ${{ inputs.name }}
-        uses: cbrgm/telegram-github-action@v1.0.9
+        uses: appleboy/telegram-action@v0.1.1
         with:
-          to: ${{ secrets.envCHAT_ID }}
+          to: ${{ secrets.envTO }}
           token: ${{ secrets.envTOKEN }}
           message: ${{ inputs.message }}

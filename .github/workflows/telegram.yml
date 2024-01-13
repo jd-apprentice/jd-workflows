@@ -15,9 +15,9 @@ on:
         description: 'Name'
         required: false
     secrets:
-      token:
+      envTOKEN:
         description: 'Telegram Bot Token'
-      chat_id:
+      envCHAT_ID:
         description: 'Telegram Chat ID'
 
 jobs:
@@ -32,6 +32,6 @@ jobs:
       - name: ${{ inputs.name }}
         uses: cbrgm/telegram-github-action@v1.0.9
         with:
-          to: ${{ secrets.chat_id }}
-          token: ${{ secrets.token }}
+          to: ${{ secrets.envCHAT_ID }}
+          token: ${{ secrets.envTOKEN }}
           message: ${{ inputs.message }}

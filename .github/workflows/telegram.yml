@@ -20,11 +20,9 @@ on:
       envTOKEN:
         description: 'Telegram Bot Token'
         required: true
-        type: string
       envCHAT_ID:
         description: 'Telegram Chat ID'
         required: true
-        type: number
 
 jobs:
   telegram_notification:

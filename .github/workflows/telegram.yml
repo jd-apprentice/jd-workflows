@@ -1,0 +1,38 @@
+## https://github.com/marketplace/actions/telegram-message-action
+name: Send Telegram Message
+
+on:
+  workflow_call:
+    inputs:
+      token:
+        description: 'Telegram Bot Token'
+        required: true
+      chat_id:
+        description: 'Telegram Chat ID'
+        required: true
+      message:
+        description: 'Message to send'
+        required: true
+      runs-on:
+        description: 'Runs on'
+        required: false
+        default: 'ubuntu-latest'
+      name:
+        description: 'Name'
+        required: false
+
+jobs:
+  telegram_notification:
+    runs-on: ${{ inputs.runs-on }}
+    name: ${{ inputs.name }}
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: ${{ inputs.name }}
+        uses: cbrgm/telegram-github-action@v1.0.9
+        with:
+          to: ${{ inputs.chat_id }}
+          token: ${{ inputs.token }}
+          message: ${{ inputs.message }}

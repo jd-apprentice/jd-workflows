@@ -17,8 +17,10 @@ on:
     secrets:
       envTOKEN:
         description: 'Telegram Bot Token'
+        required: true
       envCHAT_ID:
         description: 'Telegram Chat ID'
+        required: true
 
 jobs:
   telegram_notification:

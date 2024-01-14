@@ -1,0 +1,36 @@
+name: gitleaks
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        default: ubuntu-latest
+        required: false
+        type: string
+      name:
+        default: gitleaks scan
+        required: false
+        type: string
+    secrets:
+      gh_token:
+        required: true
+      gl_license:
+        required: false
+        
+jobs:
+  scan:
+    name: ${{ inputs.name }}
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: ${{ inputs.name}}
+        uses: gitleaks/gitleaks-action@v2
+        id: scan
+        env:
+          GITHUB_TOKEN: ${{ secrets.gh_token }}
+          GITLEAKS_LICENSE: ${{ secrets.gl_license }}

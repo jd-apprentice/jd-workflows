@@ -1,0 +1,33 @@
+## https://github.com/marketplace/actions/shellcheck
+
+name: Linter
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        default: ubuntu-latest
+        required: false
+        type: string
+      name:
+        default: Shellcheck
+        required: false
+        type: string
+      severity:
+        default: "error"
+        required: false
+        type: string
+
+jobs:
+  shellcheck:
+    name: ${{ inputs.name }}
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: ${{ inputs.name }}
+        uses: ludeeus/action-shellcheck@master
+        with:
+          severity: ${{ inputs.severity }}

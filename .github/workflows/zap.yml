@@ -1,0 +1,50 @@
+name: ZAP Scan
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        default: ubuntu-latest
+        required: false
+        type: string
+      name:
+        default: ZAP Scan
+        required: false
+        type: string
+      docker_name:
+        default: ghcr.io/zaproxy/zaproxy:stable
+        required: false
+        type: string
+      target:
+        default: https://jonathan.com.ar
+        required: true
+        type: string
+      rules:
+        default: .zap/rules.tsv
+        required: false
+        type: string
+      cmd_options:
+        default: -a
+        required: false
+        type: string
+    secrets:
+      gh_token:
+        required: true
+
+jobs:
+  zap_scan:
+    runs-on: ${{ inputs.runs-on }}
+    name: ${{ inputs.name }}
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: ${{ inputs.name }}
+        uses: zaproxy/action-baseline@v0.10.0
+        with:
+          token: ${{ secrets.gh_token }}
+          docker_name: ${{ inputs.docker_name }}
+          target: ${{ inputs.target }}
+          rules_file_name: ${{ inputs.rules }}
+          cmd_options: ${{ inputs.cmd_options }}

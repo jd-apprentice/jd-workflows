@@ -1,0 +1,72 @@
+# https://github.com/codacy/codacy-analysis-cli-action.
+# For more information on Codacy Analysis CLI in general, see
+# https://github.com/codacy/codacy-analysis-cli.
+
+name: Codacy Security Scan
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        default: ubuntu-latest
+        required: false
+        type: string
+      name:
+        default: codacy-security-scan
+        required: false
+        type: string
+      verbose:
+        default: true
+        required: false
+        type: boolean
+      output:
+        default: results.sarif
+        required: false
+        type: string
+      format:
+        default: sarif
+        required: false
+        type: string
+      gh-code-scanning-compat:
+        default: true
+        required: false
+        type: boolean
+      max-allowed-issues:
+        default: 2147483647
+        required: false
+        type: number
+    secrets:
+      project_token:
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  codacy-security-scan:
+    permissions:
+      contents: read 
+      security-events: write 
+      actions: read
+
+    name: ${{ inputs.name }}
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: ${{ inputs.name }}
+        uses: codacy/codacy-analysis-cli-action@d840f886c4bd4edc059706d09c6a1586111c540b
+        with:
+          project-token: ${{ secrets.project_token }}
+          verbose: ${{ inputs.verbose }}
+          output: ${{ inputs.output }}
+          format: ${{ inputs.format }}
+          gh-code-scanning-compat: ${{ inputs.gh-code-scanning-compat }}
+          max-allowed-issues: ${{ inputs.max-allowed-issues }}
+
+      - name: Upload SARIF results file
+        uses: github/codeql-action/upload-sarif@v2
+        with:
+          sarif_file: ${{ inputs.output }}

@@ -1,0 +1,30 @@
+## https://github.com/actions/download-artifact
+name: Download Sarif
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        default: ubuntu-latest
+        required: false
+        type: string
+      name:
+        default: Download Sarif
+        required: false
+        type: string
+
+jobs:
+  satif:
+    name: ${{ inputs.name }}
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+
+      - name: Download SARIF artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: code-scanning-results
+          path: snyk.sarif
+        
+      - name: Extract Sarif Data
+          id: extract-sarif
+          run: echo "::set-output name=results::$(cat sarif-results/snyk.sarif)"

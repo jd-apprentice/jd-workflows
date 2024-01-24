@@ -1,0 +1,34 @@
+## https://github.com/marketplace/actions/slack-send
+name: Send Slack Message
+
+on:
+  workflow_call:
+    inputs:
+      payload:
+        description: 'Message to send'
+        required: true
+        type: string
+      runs-on:
+        default: ubuntu-latest
+        required: false
+        type: string
+      name:
+        default: Slack Message
+        required: false
+        type: string
+    secrets:
+      envSLACK_WEBHOOK_URL:
+        required: true
+
+jobs:
+  send-message:
+      runs-on: ${{ inputs.runs-on }}
+      steps:
+        - name: ${{ inputs.name }}
+          id: slack
+          uses: slackapi/slack-github-action@v1.24.0
+          with:
+            payload: ${{ inputs.payload }}
+          env:
+            SLACK_WEBHOOK_URL: ${{ secrets.envSLACK_WEBHOOK_URL }}
+            SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

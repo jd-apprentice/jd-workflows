@@ -1,0 +1,49 @@
+## https://github.com/marketplace/actions/create-release
+## https://github.com/marketplace/actions/github-tag
+
+name: Release
+
+on:
+  workflow_call:
+    inputs:
+      runs-on:
+        default: ubuntu-latest
+        required: false
+        type: string
+      name:
+        default: Create a Github Release
+        required: false
+        type: string
+      tag-action_version:
+        default: v6.2
+        required: false
+        type: string
+      release-action_version:
+        default: v1
+        required: false
+        type: string
+    secrets:
+      gh_token:
+        required: true
+
+jobs:
+  release:
+    name: ${{ inputs.name }}
+    runs-on: ${{ inputs.runs-on }}
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create a Tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@${{ inputs.tag-action_version }}
+        with:
+          github_token: ${{ secrets.gh_token }}
+          
+      - name: ${{ inputs.name }}
+        uses: ncipollo/release-action@${{ inputs.release-action_version }}
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}

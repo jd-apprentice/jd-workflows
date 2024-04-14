@@ -14,14 +14,6 @@ on:
         default: Create a Github Release
         required: false
         type: string
-      tag_action_version:
-        default: v6.2
-        required: false
-        type: string
-      release_action_version:
-        default: v1
-        required: false
-        type: string
     secrets:
       gh_token:
         required: true
@@ -37,12 +29,12 @@ jobs:
 
       - name: Create a Tag
         id: tag_version
-        uses: mathieudutour/github-tag-action@${{ inputs.tag_action_version }}
+        uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.gh_token }}
           
       - name: ${{ inputs.name }}
-        uses: ncipollo/release-action@${{ inputs.release_action_version }}
+        uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: Release ${{ steps.tag_version.outputs.new_tag }}

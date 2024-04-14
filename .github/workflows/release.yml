@@ -6,7 +6,7 @@ name: Release
 on:
   workflow_call:
     inputs:
-      runs-on:
+      runs_on:
         default: ubuntu-latest
         required: false
         type: string
@@ -14,11 +14,11 @@ on:
         default: Create a Github Release
         required: false
         type: string
-      tag-action_version:
+      tag_action_version:
         default: v6.2
         required: false
         type: string
-      release-action_version:
+      release_action_version:
         default: v1
         required: false
         type: string
@@ -29,7 +29,7 @@ on:
 jobs:
   release:
     name: ${{ inputs.name }}
-    runs-on: ${{ inputs.runs-on }}
+    runs-on: ${{ inputs.runs_on }}
     steps:
 
       - name: Checkout
@@ -37,12 +37,12 @@ jobs:
 
       - name: Create a Tag
         id: tag_version
-        uses: mathieudutour/github-tag-action@${{ inputs.tag-action_version }}
+        uses: mathieudutour/github-tag-action@${{ inputs.tag_action_version }}
         with:
           github_token: ${{ secrets.gh_token }}
           
       - name: ${{ inputs.name }}
-        uses: ncipollo/release-action@${{ inputs.release-action_version }}
+        uses: ncipollo/release-action@${{ inputs.release_action_version }}
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: Release ${{ steps.tag_version.outputs.new_tag }}

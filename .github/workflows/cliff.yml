@@ -35,7 +35,7 @@ jobs:
           uses: orhun/git-cliff-action@v3
           with:
             config: cliff.toml
-            args: ${{ cliff_args }}
+            args: ${{ inputs.cliff_args }}
           env:
             OUTPUT: CHANGELOG.md
             GITHUB_REPO: ${{ github.repository }}

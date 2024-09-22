@@ -15,6 +15,10 @@ on:
         default: --verbose
         required: false
         type: string
+      file_path:
+        default: ""
+        required: true
+        type: string
     secrets:
       gh_token:
         required: true
@@ -43,11 +47,12 @@ jobs:
     upload:
       name: Upload the release
       needs: changelog
-      runs-on: ubuntu-latest
+      runs-on: ${{ inputs.runs_on }}
       steps:
         - name: Upload the binary releases
           uses: svenstaro/upload-release-action@v2
           with:
+            file: ${{ inputs.file_path }}
             repo_token: ${{ secrets.GITHUB_TOKEN }}
             tag: ${{ github.ref }}
             body: ${{ needs.changelog.outputs.release_body }}

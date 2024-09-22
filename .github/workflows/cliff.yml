@@ -36,7 +36,7 @@ jobs:
           id: git-cliff
           with:
             config: cliff.toml
-            args: ${{ imputs.cliff_args }}
+            args: ${{ inputs.cliff_args }}
           env:
             OUTPUT: CHANGELOG.md
             GITHUB_REPO: ${{ github.repository }}

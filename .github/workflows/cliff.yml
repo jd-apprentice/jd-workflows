@@ -19,6 +19,14 @@ on:
         default: ""
         required: true
         type: string
+      binary_name:
+        default: ""
+        required: true
+        type: string
+      binary_path:
+        default: ""
+        required: true
+        type: string
     secrets:
       gh_token:
         required: true
@@ -49,6 +57,11 @@ jobs:
       needs: changelog
       runs-on: ${{ inputs.runs_on }}
       steps:
+        - uses: actions/download-artifact@v3
+          with:
+            name: ${{ inputs.binary_name }}
+            path: ${{ inputs.binary_path }}
+            
         - name: Upload the binary releases
           uses: svenstaro/upload-release-action@v2
           with:

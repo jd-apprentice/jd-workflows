@@ -12,7 +12,7 @@ on:
         required: false
         type: string
       cliff_args:
-        default: -vv --latest --strip header
+        default: --verbose
         required: false
         type: string
     secrets:
@@ -26,38 +26,16 @@ jobs:
       outputs:
         release_body: ${{ steps.git-cliff.outputs.content }}
       steps:
-        - name: Checkout
-          uses: actions/checkout@v4
+        - name: ${{ inputs.name }}
+          uses: actions/checkout@v3
           with:
             fetch-depth: 0
-  
+        
         - name: ${{ inputs.name }}
-          uses: orhun/git-cliff-action@v4
-          id: git-cliff
+          uses: orhun/git-cliff-action@v3
           with:
             config: cliff.toml
-            args: ${{ inputs.cliff_args }}
+            args: ${{ cliff_args }}
           env:
             OUTPUT: CHANGELOG.md
             GITHUB_REPO: ${{ github.repository }}
-  
-        - name: Upload the binary releases
-          uses: svenstaro/upload-release-action@v2
-          with:
-            file: binary_release.zip
-            repo_token: ${{ secrets.gh_token }}
-            tag: ${{ github.ref }}
-            body: ${{ steps.git-cliff.outputs.content }}
-  
-    upload:
-      name: Upload the release
-      needs: changelog
-      runs-on: ${{ inputs.runs_on }}
-      steps:
-        - name: Upload the binary releases
-          uses: svenstaro/upload-release-action@v2
-          with:
-            file: binary_release.zip
-            repo_token: ${{ secrets.gh_token }}
-            tag: ${{ github.ref }}
-            body: ${{ needs.changelog.outputs.release_body }}

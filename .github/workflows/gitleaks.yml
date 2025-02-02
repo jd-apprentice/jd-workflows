@@ -29,7 +29,7 @@ jobs:
           fetch-depth: 0
 
       - name: ${{ inputs.name}}
-        uses: gitleaks/gitleaks-action@v2.3.3
+        uses: gitleaks/gitleaks-action@v2.3.7
         id: scan
         env:
           GITHUB_TOKEN: ${{ secrets.gh_token }}

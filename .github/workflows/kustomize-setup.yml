@@ -28,6 +28,9 @@ on:
       DOCKERHUB_USERNAME:
         required: true
         description: Docker Hub username
+      DOCKERHUB_TOKEN:
+        required: true
+        description: Docker Hub access token
 
 jobs:
   update-manifest:

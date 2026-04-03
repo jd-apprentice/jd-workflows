@@ -62,7 +62,7 @@ jobs:
           ref: ${{ inputs.target_branch }}
 
       - name: Setup Kustomize
-        uses: ./.github/workflows/kustomize-setup.yml
+        uses: jd-apprentice/jd-workflows/.github/workflows/kustomize-setup.yml@main
 
       - name: Update Kubernetes manifest
         run: |

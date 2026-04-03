@@ -1,0 +1,71 @@
+name: Docker Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy (dev, staging, prod)'
+        required: true
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+  pull_request:
+    branches: ["develop"]
+    paths:
+      - "src/**"
+      - "tests/**"
+  push:
+    branches: ["master"]
+    tags:
+      - "v*"
+  release:
+    types: [published]
+
+jobs:
+  test:
+    permissions:
+      contents: read
+
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
+
+      - name: Set up Go
+        uses: actions/setup-go@5a083d0e9a84784eb32078397cf5459adecb4c40
+        with:
+          go-version: 1.23.10
+
+      - name: Test
+        run: go test -v ./tests
+
+  develop:
+    needs: test
+    if: ${{ github.ref_name != 'master' && !startsWith(github.ref_name, 'v') }}
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: dev
+      image_tag: dev-${{ github.sha }}
+      target_branch: develop
+      overlay_path: overlays/dev
+      app_name: ${{ inputs.app_name }}
+      dockerfile_path: ${{ inputs.dockerfile_path }}
+      commit_message: "chore: update dev image to dev-${{ github.sha }}"
+    secrets: inherit
+
+  production:
+    needs: test
+    if: (github.ref_name == 'master' || startsWith(github.ref_name, 'v')) && github.event_name != 'pull_request'
+    uses: ./.github/workflows/deploy.yml
+    with:
+      environment: prod
+      image_tag: ${{ github.ref_name }}
+      target_branch: master
+      overlay_path: overlays/prod
+      app_name: ${{ inputs.app_name }}
+      dockerfile_path: ${{ inputs.dockerfile_path }}
+      commit_message: "chore: update image tag to ${{ github.ref_name }}"
+    secrets: inherit

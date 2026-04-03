@@ -1,53 +1,13 @@
-name: [ADDRESS]
+name: Kustomize Setup
 
-on:
-  workflow_call:
-    inputs:
-      environment:
-        required: true
-        type: string
-      image_tag:
-        required: true
-        type: string
-      target_branch:
-        required: true
-        type: string
-      overlay_path:
-        required: true
-        type: string
-      app_name:
-        required: true
-        type: string
-      commit_message:
-        required: true
-        type: string
+runs:
+  using: composite
+  steps:
+    - name: Checkout
+      uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
 
-jobs:
-  update-manifest:
-    name: Update Kustomize Manifest
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout target branch
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ inputs.target_branch }}
-
-      - name: Install [PERSON_NAME]
-        run: |
-          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash -s -- 5.8.1
-          sudo mv kustomize /usr/local/bin/
-        shell: bash
-
-      - name: Update image tag
-        run: |
-          cd infra/kubernetes/${{ inputs.overlay_path }}
-          kustomize edit set image dyallo/${{ inputs.app_name }}=${{ secrets.[PERSON_NAME] }}/${{ inputs.app_name }}:${{ inputs.image_tag }}
-
-      - name: Commit and push
-        run: |
-          git config user.name "GitHub Action"
-          git config user.email "[EMAIL]"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git add infra/kubernetes/${{ inputs.overlay_path }}/kustomization.yaml
-          git commit -m "${{ inputs.commit_message }}"
-          git push origin HEAD:refs/heads/${{ inputs.target_branch }}
+    - name: Install Kustomize
+      run: |
+        curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash -s -- 5.8.1
+        sudo mv kustomize /usr/local/bin/
+      shell: bash

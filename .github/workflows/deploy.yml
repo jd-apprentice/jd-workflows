@@ -37,6 +37,13 @@ on:
         required: true
         type: string
         description: Commit message for manifest update
+    secrets:
+      DOCKERHUB_USERNAME:
+        required: true
+        description: Docker Hub username
+      DOCKERHUB_TOKEN:
+        required: true
+        description: Docker Hub access token
 
 jobs:
   build-and-push:
@@ -77,4 +84,5 @@ jobs:
       overlay_path: ${{ inputs.overlay_path }}
       app_name: ${{ inputs.app_name }}
       commit_message: ${{ inputs.commit_message }}
-    secrets: inherit
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

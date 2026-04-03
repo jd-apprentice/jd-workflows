@@ -21,6 +21,10 @@ on:
       commit_message:
         required: true
         type: string
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+        description: GitHub token for pushing manifest updates
 
 jobs:
   update-manifest:

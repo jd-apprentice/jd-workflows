@@ -8,7 +8,7 @@ on:
         required: false
         type: string
       name:
-        default: codacy-security-scan
+        default: docker build and push
         required: false
         type: string
       context:

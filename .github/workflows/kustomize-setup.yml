@@ -22,7 +22,7 @@ on:
         required: true
         type: string
     secrets:
-      GITHUB_TOKEN:
+      GH_TOKEN:
         required: true
         description: GitHub token for pushing manifest updates
 
@@ -51,7 +51,7 @@ jobs:
         run: |
           git config user.name "GitHub Action"
           git config user.email "[EMAIL]"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+          git remote set-url origin https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/${{ github.repository }}
           git add infra/kubernetes/${{ inputs.overlay_path }}/kustomization.yaml
           git commit -m "${{ inputs.commit_message }}"
           git push origin HEAD:refs/heads/${{ inputs.target_branch }}

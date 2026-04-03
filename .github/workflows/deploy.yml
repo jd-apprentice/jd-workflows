@@ -85,4 +85,4 @@ jobs:
       app_name: ${{ inputs.app_name }}
       commit_message: ${{ inputs.commit_message }}
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

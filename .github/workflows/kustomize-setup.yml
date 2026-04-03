@@ -25,6 +25,9 @@ on:
       GH_TOKEN:
         required: true
         description: GitHub token for pushing manifest updates
+      DOCKERHUB_USERNAME:
+        required: true
+        description: Docker Hub username
 
 jobs:
   update-manifest:

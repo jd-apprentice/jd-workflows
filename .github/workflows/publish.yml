@@ -4,13 +4,21 @@ on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to deploy (dev, staging, prod)'
+        description: "Environment to deploy (dev, prod)"
         required: true
         type: choice
         options:
           - dev
-          - staging
           - prod
+      app_name:
+        description: "Application name for Docker image"
+        required: true
+        type: string
+      dockerfile_path:
+        description: "Path to Dockerfile relative to repo root"
+        required: false
+        type: string
+        default: Dockerfile
   pull_request:
     branches: ["develop"]
     paths:
@@ -32,10 +40,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@85e6279cec87321a52edac9c87bce653a07cf6c2
+        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
 
       - name: Set up Go
-        uses: actions/setup-go@5a083d0e9a84784eb32078397cf5459adecb4c40
+        uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c
         with:
           go-version: 1.23.10
 

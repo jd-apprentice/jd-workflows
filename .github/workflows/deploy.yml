@@ -39,8 +39,8 @@ on:
         description: Commit message for manifest update
 
 jobs:
-  deploy:
-    name: Deploy to ${{ inputs.environment }}
+  build-and-push:
+    name: Build and Push Docker
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -66,24 +66,15 @@ jobs:
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.app_name }}:${{ inputs.image_tag }}
             ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.app_name }}:${{ github.sha }}
 
-      - name: Checkout target branch
-        uses: actions/checkout@0c366fd6a839edf440554fa01a7085ccba70ac98
-        with:
-          ref: ${{ inputs.target_branch }}
-
-      - name: Setup Kustomize
-        uses: jd-apprentice/jd-workflows/.github/workflows/kustomize-setup.yml@main
-
-      - name: Update Kubernetes manifest
-        run: |
-          cd infra/kubernetes/${{ inputs.overlay_path }}
-          kustomize edit set image dyallo/${{ inputs.app_name }}=${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.app_name }}:${{ inputs.image_tag }}
-
-      - name: Commit and push manifest update
-        run: |
-          git config user.name "GitHub Action"
-          git config user.email "action@github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
-          git add infra/kubernetes/${{ inputs.overlay_path }}/kustomization.yaml
-          git commit -m "${{ inputs.commit_message }}"
-          git push origin HEAD:refs/heads/${{ inputs.target_branch }}
+  update-manifest:
+    name: Update Kustomize Manifest
+    needs: build-and-push
+    uses: ./.github/workflows/kustomize-setup.yml
+    with:
+      environment: ${{ inputs.environment }}
+      image_tag: ${{ inputs.image_tag }}
+      target_branch: ${{ inputs.target_branch }}
+      overlay_path: ${{ inputs.overlay_path }}
+      app_name: ${{ inputs.app_name }}
+      commit_message: ${{ inputs.commit_message }}
+    secrets: inherit

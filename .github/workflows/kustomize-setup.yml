@@ -45,7 +45,7 @@ jobs:
       - name: Update image tag
         run: |
           cd infra/kubernetes/${{ inputs.overlay_path }}
-          kustomize edit set image dyallo/${{ inputs.app_name }}=${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.app_name }}:${{ inputs.image_tag }}
+          kustomize edit set image ${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.app_name }}=${{ secrets.DOCKERHUB_USERNAME }}/${{ inputs.app_name }}:${{ inputs.image_tag }}
 
       - name: Commit and push
         run: |
